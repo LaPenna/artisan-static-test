@@ -2,10 +2,10 @@
 
 return [
     'production' => false,
-    'baseUrl' => 'https://artisanstatic.netlify.app',
+    'baseUrl' => 'https://lp-jigsaw-test.netlify.app/',
     'site' => [
         'title' => 'My Jigsaw Blog',
-        'description' => 'Personal blog of John Doe.',
+        'description' => 'Personal blog of KLP',
         'image' => 'default-share.png',
     ],
     'owner' => [
