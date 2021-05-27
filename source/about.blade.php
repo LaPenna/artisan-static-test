@@ -1,16 +1,19 @@
+---
+title: About
+description: A little bit about the site
+---
 @extends('_layouts.master')
 
-@section('title', 'About')
-
-@section('content')
+@section('body')
     <h1>About</h1>
 
-    <p>My name is {{ $page->owner->name }}</p>
+    <img src="/assets/img/about.png"
+        alt="About image"
+        class="flex rounded-full h-64 w-64 bg-contain mx-auto md:float-right my-6 md:ml-10">
 
-    <h2>Links:</h2>
+    <p class="mb-6">This is where you can give a little more information about yourself or site. If you'd like to change the structure of this page, you can find the file at <code>source/about.blade.php</code></p>
 
-    <ul>
-        <li><a href="https://twitter.com/{{ $page->owner->twitter }}" target="_blank">Twitter</a></li>
-        <li><a href="https://github.com/{{ $page->owner->github }}" target="_blank">GitHub</a></li>
-    </ul>
+    <p class="mb-6">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum officia dolorem accusantium veniam quae, possimus, temporibus explicabo magni voluptas. fugit natus deserunt atque veniam possimus earum harum itaque est!</p>
+
+    <p class="mb-6">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum officia dolorem accusantium veniam quae, possimus, temporibus explicabo magni voluptas. fugit natus deserunt atque veniam!</p>
 @endsection

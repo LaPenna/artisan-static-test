@@ -1,39 +1,47 @@
 @extends('_layouts.master')
 
-@section('title', $page->title)
+@php
+    $page->type = 'article';
+@endphp
 
-@section('content')
-    <h1>{{ $page->title }}</h1>
-
-    @if ($page->image)
-        <img src="{{ $page->image }}" style="object-fit: cover; height: 250px; width: 100%;">
+@section('body')
+    @if ($page->cover_image)
+        <img src="{{ $page->cover_image }}" alt="{{ $page->title }} cover image" class="mb-2">
     @endif
 
-    <p>
-        <strong>{{ $page->prettyDate('F j, Y') }}</strong><br>
-        @foreach ($page->tags as $tag)
-            <a href="/tags/{{ $tag }}">{{ $tag }}</a>
-            {{ $loop->last ? '' : '-' }}
+    <h1 class="leading-none mb-2">{{ $page->title }}</h1>
+
+    <p class="text-gray-700 text-xl md:mt-0">{{ $page->author }}  •  {{ date('F j, Y', $page->date) }}</p>
+
+    @if ($page->categories)
+        @foreach ($page->categories as $i => $category)
+            <a
+                href="{{ '/blog/categories/' . $category }}"
+                title="View posts in {{ $category }}"
+                class="inline-block bg-gray-300 hover:bg-blue-200 leading-loose tracking-wide text-gray-800 uppercase text-xs font-semibold rounded mr-4 px-3 pt-px"
+            >{{ $category }}</a>
         @endforeach
-    </p>
-
-    <blockquote data-phpdate="{{ $page->date }}">
-        <em>WARNING: This post is over a year old. Some of the information this contains may be outdated.</em>
-    </blockquote>
-
-    <hr>
-
-    <p>DISCLAIMER: Any 3rd-party services in these posts and in the config are only recommendations/suggestions. I am not affiliated with any of them.</p>
-
-    @yield('postContent')
-
-    <hr>
-
-    @include('_partials.share')
-
-    @if ($page->comments)
-        @include('_partials.comments')
-    @else
-        <p>Comments are not enabled for this post.</p>
     @endif
+
+    <div class="border-b border-blue-200 mb-10 pb-4" v-pre>
+        @yield('content')
+    </div>
+
+    <nav class="flex justify-between text-sm md:text-base">
+        <div>
+            @if ($next = $page->getNext())
+                <a href="{{ $next->getUrl() }}" title="Older Post: {{ $next->title }}">
+                    &LeftArrow; {{ $next->title }}
+                </a>
+            @endif
+        </div>
+
+        <div>
+            @if ($previous = $page->getPrevious())
+                <a href="{{ $previous->getUrl() }}" title="Newer Post: {{ $previous->title }}">
+                    {{ $previous->title }} &RightArrow;
+                </a>
+            @endif
+        </div>
+    </nav>
 @endsection
