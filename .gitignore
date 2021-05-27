@@ -2,3 +2,6 @@
 /node_modules/
 /vendor/
 .DS_Store
+source/assets/build/js/main.js
+source/assets/build/css/main.css
+source/assets/build/mix-manifest.json
