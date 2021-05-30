@@ -19,6 +19,6 @@ mix
   .options({
     processCssUrls: false,
     postCss: [require("tailwindcss")],
-  });
-// .sourceMaps()
-// .version();
+  })
+  .sourceMaps()
+  .version();
