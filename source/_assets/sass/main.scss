@@ -1,18 +1,13 @@
-// Tacit - CSS Framework for Dummies, Without Classes
-@import url('https://unpkg.com/tacit-css@1.5.5/dist/tacit-css-1.5.5.min.css');
+@tailwind base;
+@tailwind components;
 
-@import "~highlight.js/scss/a11y-dark";
-@import "~notyf/notyf.min";
+// Code syntax highlighting,
+// powered by https://highlightjs.org
+@import '~highlight.js/styles/a11y-light.css';
 
-section h1:first-child {
-    margin-top: 18px;
-}
+@import 'base';
+@import 'navigation';
+@import 'mailchimp';
+@import 'blog';
 
-button[data-sharer] {
-    color: #fff;
-}
-
-.test-css {
-    padding: 5px;
-    border: 2px solid blue;
-}
+@tailwind utilities;

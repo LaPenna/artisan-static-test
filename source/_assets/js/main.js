@@ -1,22 +1,33 @@
-import 'sharer.js';
-import './highlight'
-import './contact'
+window.axios = require("axios");
+import Vue from "vue";
+import Search from "./components/Search.vue";
+import hljs from "highlight.js/lib/core";
 
-const outdated = document.querySelector('[data-phpdate]');
+// Syntax highlighting
+hljs.registerLanguage("bash", require("highlight.js/lib/languages/bash"));
+hljs.registerLanguage("css", require("highlight.js/lib/languages/css"));
+hljs.registerLanguage("html", require("highlight.js/lib/languages/xml"));
+hljs.registerLanguage(
+  "javascript",
+  require("highlight.js/lib/languages/javascript")
+);
+hljs.registerLanguage("json", require("highlight.js/lib/languages/json"));
+hljs.registerLanguage(
+  "markdown",
+  require("highlight.js/lib/languages/markdown")
+);
+hljs.registerLanguage("php", require("highlight.js/lib/languages/php"));
+hljs.registerLanguage("scss", require("highlight.js/lib/languages/scss"));
+hljs.registerLanguage("yaml", require("highlight.js/lib/languages/yaml"));
 
-if (outdated) {
-    const phpdate = outdated.dataset.phpdate;
-    if (((Date.now() / 1000 - phpdate) / 86400) < 365) {
-        outdated.remove();
-    }
-}
+document.querySelectorAll("pre code").forEach((block) => {
+  hljs.highlightBlock(block);
+});
 
-document.querySelector('[data-year]').textContent = (new Date().getFullYear());
+Vue.config.productionTip = false;
 
-const clickMe = document.querySelector('.test-js');
-
-if (clickMe) {
-    clickMe.addEventListener('click', () => {
-        clickMe.textContent = 'it works ' + String(Date.now()).slice(-6);
-    });
-}
+new Vue({
+  components: {
+    Search,
+  },
+}).$mount("#vue-search");

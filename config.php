@@ -1,51 +1,63 @@
 <?php
 
+use Illuminate\Support\Str;
+
 return [
+    'baseUrl' => '',
     'production' => false,
-    'baseUrl' => 'https://artisanstatic.netlify.app',
-    'site' => [
-        'title' => 'My Jigsaw Blog',
-        'description' => 'Personal blog of John Doe.',
-        'image' => 'default-share.png',
-    ],
-    'owner' => [
-        'name' => 'John Doe',
-        'twitter' => 'johndoe',
-        'github' => 'johndoe',
-    ],
-    'services' => [
-        'cmsVersion' => '2.10.125',
-        'analytics' => 'UA-XXXXX-Y',
-        'disqus' => 'artisanstatic',
-        'formcarry' => 'XXXXXXXXXXXX',
-        'cloudinary' => [
-            'cloudName' => 'artisanstatic',
-            'apiKey' => '365895137117119',
-        ],
-    ],
+    'siteName' => 'Blog Starter Template',
+    'siteDescription' => 'Generate an elegant blog with Jigsaw',
+    'siteAuthor' => 'Author Name',
+
+    // collections
     'collections' => [
         'posts' => [
-            'path' => 'posts/{filename}',
+            'author' => 'Author Name', // Default author, if not provided in a post
             'sort' => '-date',
-            'extends' => '_layouts.post',
-            'section' => 'postContent',
-            'isPost' => true,
-            'comments' => true,
-            'tags' => [],
-            'hasTag' => function ($page, $tag) {
-                return collect($page->tags)->contains($tag);
-            },
-            'prettyDate' => function ($page, $format = 'M j, Y') {
-                return date($format, $page->date);
-            },
+            'path' => 'blog/{filename}',
         ],
-        'tags' => [
-            'path' => 'tags/{filename}',
-            'extends' => '_layouts.tag',
-            'section' => '',
-            'name' => function ($page) {
-                return $page->getFilename();
+        'categories' => [
+            'path' => '/blog/categories/{filename}',
+            'posts' => function ($page, $allPosts) {
+                return $allPosts->filter(function ($post) use ($page) {
+                    return $post->categories ? in_array($page->getFilename(), $post->categories, true) : false;
+                });
             },
         ],
     ],
+
+    // helpers
+    'getDate' => function ($page) {
+        return Datetime::createFromFormat('U', $page->date);
+    },
+    'getExcerpt' => function ($page, $length = 255) {
+        if ($page->excerpt) {
+            return $page->excerpt;
+        }
+
+        $content = preg_split('/<!-- more -->/m', $page->getContent(), 2);
+        $cleaned = trim(
+            strip_tags(
+                preg_replace(['/<pre>[\w\W]*?<\/pre>/', '/<h\d>[\w\W]*?<\/h\d>/'], '', $content[0]),
+                '<code>'
+            )
+        );
+
+        if (count($content) > 1) {
+            return $cleaned;
+        }
+
+        $truncated = substr($cleaned, 0, $length);
+
+        if (substr_count($truncated, '<code>') > substr_count($truncated, '</code>')) {
+            $truncated .= '</code>';
+        }
+
+        return strlen($cleaned) > $length
+            ? preg_replace('/\s+?(\S+)?$/', '', $truncated) . '...'
+            : $cleaned;
+    },
+    'isActive' => function ($page, $path) {
+        return Str::endsWith(trimPath($page->getPath()), trimPath($path));
+    },
 ];

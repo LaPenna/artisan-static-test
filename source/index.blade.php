@@ -1,21 +1,53 @@
 @extends('_layouts.master')
 
-@section('content')
-    <h1>Welcome to Artisan Static</h1>
+@section('body')
+@foreach ($posts->where('featured', true) as $featuredPost)
+<div class="w-full mb-6">
+    @if ($featuredPost->cover_image)
+    <img src="{{ $featuredPost->cover_image }}" alt="{{ $featuredPost->title }} cover image" class="mb-6">
+    @endif
 
-    <p>Artisan Static is a starter template for building a static Jigsaw blog hosted on Netlify.</p>
+    <p class="my-2 font-medium text-gray-700">
+        {{ $featuredPost->getDate()->format('F j, Y') }}
+    </p>
 
-    <p>This comes with code highlighting, share buttons, comments, analytics, an RSS feed, a contact form, a CMS and more.</p>
+    <h2 class="mt-0 text-3xl">
+        <a href="{{ $featuredPost->getUrl() }}" title="Read {{ $featuredPost->title }}"
+            class="font-extrabold text-gray-900">
+            {{ $featuredPost->title }}
+        </a>
+    </h2>
 
-    <p>The HTML, CSS and JavaScript in this template are extremely minimal, which makes the code easy to build on top of or replace completely.</p>
+    <p class="mt-0 mb-4">{!! $featuredPost->getExcerpt() !!}</p>
 
-    <a href="https://ko-fi.com/Y8Y07ACJ" target="_blank" rel="noopener">
-        <img src="{{ media('kofi-button.png') }}" alt="ko-fi" width="223" height="30">
+    <a href="{{ $featuredPost->getUrl() }}" title="Read - {{ $featuredPost->title }}"
+        class="mb-4 tracking-wide uppercase">
+        Read
     </a>
+</div>
 
-    <h2 id="test">Asset Compilation Test</h2>
+@if (! $loop->last)
+<hr class="my-6 border-b">
+@endif
+@endforeach
 
-    <p>CSS test: <span class="test-css">text with blue border</span></p>
+@include('_components.newsletter-signup')
 
-    <p>JavaScript test: <a href="#test" class="test-js">click me</a></p>
-@endsection
+@foreach ($posts->where('featured', false)->take(6)->chunk(2) as $row)
+<div class="flex flex-col md:flex-row md:-mx-6">
+    @foreach ($row as $post)
+    <div class="w-full md:w-1/2 md:mx-6">
+        @include('_components.post-preview-inline')
+    </div>
+
+    @if (! $loop->last)
+    <hr class="block w-full mt-2 mb-6 border-b md:hidden">
+    @endif
+    @endforeach
+</div>
+
+@if (! $loop->last)
+<hr class="w-full mt-2 mb-6 border-b">
+@endif
+@endforeach
+@stop
